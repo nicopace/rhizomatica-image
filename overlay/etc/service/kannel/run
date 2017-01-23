@@ -1,0 +1,2 @@
+#!/bin/sh
+exec /usr/sbin/run_kannel_box --pidfile /var/run/kannel/kannel_smsbox.pid --no-extra-argsa -v 4 /etc/kannel/kannel.conf >>/var/log/kannel.log 2>&1

@@ -1,0 +1,2 @@
+#!/bin/sh
+exec /usr/bin/apache2 -DFOREGROUND >>/var/log/apache.log 2>&1

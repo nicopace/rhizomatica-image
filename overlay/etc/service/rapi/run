@@ -1,0 +1,3 @@
+#!/bin/sh
+export PYTHONPATH=$PYTHONPATH:/opt/rhizomatica/rccn
+exec python /opt/rhizomatica/rccn/rapi.py debug >> /var/log/rapi.log

@@ -1,0 +1,2 @@
+#!/bin/sh
+exec /usr/lib/icinga2/sbin/icinga2 --no-stack-rlimit daemon -d -e /var/log/icinga2/icinga2.err >>/var/log/icinga2.log 2>&1

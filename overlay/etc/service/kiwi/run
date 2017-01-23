@@ -1,0 +1,2 @@
+#!/bin/sh
+exec /usr/bin/nodejs /usr/share/kiwiirc/server/kiwi.js -f >> /var/log/chpst.log 2>&1

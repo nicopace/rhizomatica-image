@@ -1,0 +1,51 @@
+#Rhizomatica cron jobs
+PYTHONPATH=$PYTHONPATH:/opt/rhizomatica/rccn
+  
+# m  h    dom mon dow   user command
+
+#SMS reminders for users
+  0  8    1   *   *     rhizomatica /usr/bin/python /opt/rhizomatica/rccn/rsc.py notice
+  0  8    3   *   *     rhizomatica /usr/bin/python /opt/rhizomatica/rccn/rsc.py reminder
+  0  21   7   *   *     rhizomatica /usr/bin/python /opt/rhizomatica/rccn/rsc.py deactivate
+
+#SMS reminder for admin
+  0  */5  *   *   *     rhizomatica /opt/rhizomatica/bin/check_account_balance.sh
+
+#SMS cleanup
+  0  3    *   *   *     rhizomatica /opt/rhizomatica/bin/sms_cleanup.sh
+
+#RRDtools graphs
+*/5  *    *   *   *     rhizomatica /opt/rhizomatica/bin/platform_update_rrd.sh
+*/5  *    *   *   *     rhizomatica /opt/rhizomatica/bin/network_update_rrd.sh
+*/1  *    *   *   *     rhizomatica /opt/rhizomatica/bin/network_update60.sh
+
+#Bind check between OpenBSC and Kannel (disabled)
+# */10    *   *   *  *  rhizomatica /usr/local/bin/bind_check.sh
+
+#Roaming jobs
+*/30 *    *   *   *     rhizomatica timeout 10m /usr/bin/python /opt/rhizomatica/rccn/rrc.py > /dev/null 2>&1 ; timeout 15m /usr/bin/python /opt/rhizomatica/rccn/rhs.py > /dev/null 2>&1
+10 */2    *   *   *     rhizomatica /usr/bin/python /opt/rhizomatica/rccn/push.py recent 1
+
+#Cleanup inactive users
+  0  5    *   *   *     rhizomatica /usr/bin/python /opt/rhizomatica/rccn/rip.py > /dev/null 2>&1
+
+# amplifier monitoring
+*/5  *    *   *   *     rhizomatica /usr/local/bin/monitor_amp.sh > /dev/null 2>&1
+
+# RAPI monitoring
+*/5  *    *   *   *     rhizomatica /usr/local/bin/monitor_rapi.sh > /dev/null 2>&1
+
+#FreeSWITCH monitoring
+*/10 *    *   *   *     rhizomatica /usr/local/bin/monitor_freeswitch.sh > /dev/null 2>&1
+
+#Billing
+  0 10    *   *   *     rhizomatica [ $(date +'\%d' -d tomorrow) -eq 1 ] && /opt/rhizomatica/bin/active_subscribers.sh
+
+#Restart osmo-nitb every 6 hours (This wasn't working anyway. If it is needed, do something more elegant!)
+#  0 */6   *   *   *     rhizomatica /usr/bin/sv restart osmo-nitb 2>&1 > /dev/null
+
+#PostgreSQL backup
+  0  3    *   *   *     postgres /usr/local/bin/pg_backup_rotated.sh
+
+#SQLite backup
+  0  4    *   *   *     rhizomatica /usr/local/bin/sqlite_backup_rotated.sh
