@@ -23,9 +23,8 @@ RUN apt-get update && \
             php5-mysql php5-sqlite php5-oauth php5-json \
             kannel lcr osmocom-nitb
 
-ADD overlay/* /
+COPY overlay/*.deb /
 RUN apt-get -y install netcat && \
-    dpkg -i /rccn-beta_0.1.0_all_2017-01-16_19_05_07.deb && \
     apt-get -y install \
     freeswitch freeswitch-lang-en freeswitch-mod-amr freeswitch-mod-amrwb freeswitch-mod-b64 freeswitch-mod-bv \
     freeswitch-mod-cluechoo freeswitch-mod-commands freeswitch-mod-conference freeswitch-mod-console freeswitch-mod-db \
@@ -37,19 +36,14 @@ RUN apt-get -y install netcat && \
     freeswitch-mod-spandsp freeswitch-mod-syslog freeswitch-mod-tone-stream freeswitch-mod-voicemail \
     freeswitch-mod-voicemail-ivr freeswitch-mod-xml-cdr freeswitch-mod-g729 freeswitch-sysvinit
 
-RUN chown root.staff /usr/local/bin/ -R && \
-    chmod 775 /usr/local/bin/* -R && \
+COPY overlay/usr/local/bin/* /usr/local/bin/
+COPY overlay/etc/cron.d/* /etc/cron.d/
+COPY overlay/etc/default/* /etc/default/
+COPY overlay/etc/freeswitch/ /etc/freeswitch/
+COPY overlay/etc/osmocom/osmo-nitb.cfg /etc/osmocom/
+COPY overlay/usr/lib/freeswitch/mod/* /usr/lib/freeswitch/mod/
+COPY overlay/etc/service/ /etc/service/
 
-    chown root.root /usr/lib/freeswitch/mod/mod_cdr_pg_csv.so && \
-    chmod 444 /usr/lib/freeswitch/mod/mod_cdr_pg_csv.so && \
-
-    chown root.root /etc/freeswitch/ -R && \
-    chown root.root /etc/sv/ -R && \
-
-    chown root.root /etc/cron.d/rhizomatica && \
-    chmod 644 /etc/cron.d/rhizomatica && \
-
-    chown root.root /etc/default/lcr && \
-    chmod 644 /etc/default/lcr
+ADD https://github.com/Rhizomatica/rccn/archive/master.zip /var/rhizomatica/
 
 CMD ["/sbin/my_init"]
